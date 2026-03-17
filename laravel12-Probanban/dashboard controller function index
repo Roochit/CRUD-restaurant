@@ -1,0 +1,10 @@
+ $monthlyVisits = DB::table('tbl_counter')
+                        ->selectRaw('DATE_FORMAT(c_date, "%M-%Y") as ym, COUNT(*) as total')
+                        ->groupBy('ym')
+                        ->orderByRaw('DATE_FORMAT(c_date, "%Y-%m") DESC')
+                        ->limit(12) // จำกัดผลลัพธ์แค่ 12 แถว (12 เดือนล่าสุด)
+                        ->get();
+                        
+// แปลงเป็น array สำหรับ Chart.js
+$labels = $monthlyVisits->pluck('ym')->toArray();
+$data   = $monthlyVisits->pluck('total')->toArray();
